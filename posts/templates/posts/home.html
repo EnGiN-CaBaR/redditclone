@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Reddit Clone</title>
+</head>
+<body>
+
+{% extends 'base.html' %}
+
+{% block content %}
+    {% load static %}
+
+    <h1>The homepage of nowhere</h1>
+    <a class="btn btn-primary" href="{% url 'posts:create' %}">New Post</a>
+
+    <br/>
+    <br/>
+
+    {% for post in posts.all %}
+        <table>
+            <tr>
+                <td style="padding-right: 20px;">
+                    <a onclick="document.getElementById('upV{{ post.id }}').submit()">
+                        <img src="{% static 'open-iconic-master/png/caret-top-4x.png' %}" alt="caret-top">
+                    </a>
+                    <br/>{{ post.votes_total }}<br/>
+                    <a onclick="document.getElementById('downV{{ post.id }}').submit()">
+                        <img src="{% static 'open-iconic-master/png/caret-bottom-4x.png' %}" alt="caret-bottom">
+                    </a>
+                </td>
+                <td><a href="{{ post.url }}">{{ post.title }}</a><br/>{{ post.pub_date_pretty }}
+                    by <a href="{% url 'posts:user_detail' post.author.id %}">{{ post.author.username }}</a></td>
+            </tr>
+        </table>
+
+
+        <form id="upV{{ post.id }}" method="POST" action="{% url 'posts:upvote' post.id %}">
+            {% csrf_token %}
+
+            <input type="hidden"/>
+        </form>
+        <form id="downV{{ post.id }}" method="POST" action="{% url 'posts:downvote' post.id %}">
+            {% csrf_token %}
+
+            <input type="hidden"/>
+        </form>
+
+    {% endfor %}
+
+
+
+{% endblock %}
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
